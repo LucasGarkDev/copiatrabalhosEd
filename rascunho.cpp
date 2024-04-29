@@ -326,66 +326,67 @@ void treinamento(TLista *L){
 	}//for
 	
 }
+
+void insereNoFinal(TLista *L,TIndividuo *descendente1, TIndividuo *descendente2, TIndividuo *fimLista){
+	printf("\n\t fim da lista -> descendente1");
+	fimLista->prox = descendente1;
+	printf("\n\t descendente1 -> descendente2");
+	descendente1->prox = descendente2;
+	printf("\n\t descendente2 -> NULL");
+	descendente2->prox = NULL;
+	printf("\n\t fim da lista -> descendente2");
+	fimLista->prox = descendente2;
+}
 //=============================================================
 void cruzamento(TLista *L){
-    TIndividuo *pai1, *pai2, *descendente1, *descendente2;
+    TIndividuo *pai1, *pai2, *descendente1, *descendente2, *fimLista;
+	TIndividuo *atual = L->populacao;
     int pontoCorte, i;
     // Percorre a lista de indivíduos
     pai1 = L->populacao;
 	TLista listaFilhos;
-    while (pai1 != NULL) {
+	while (atual != NULL){
+		atual = atual->prox;
+	}
+	fimLista = atual;
+    while (pai1 != NULL || pai2 != NULL) {
         pai2 = pai1->prox;
 		printf("cruzando individuo %d com individuo %d\n",pai1->numero,pai2->numero);
-        // Verifica se há um par de pais disponíveis
-        if (pai2 != NULL) {
-            // Cria os descendentes
-            descendente1 = (TIndividuo *)malloc(sizeof(TIndividuo));
-            descendente2 = (TIndividuo *)malloc(sizeof(TIndividuo));
+        // Cria os descendentes
+        descendente1 = (TIndividuo *)malloc(sizeof(TIndividuo));
+        descendente2 = (TIndividuo *)malloc(sizeof(TIndividuo));
 
-            // Define o ponto de corte
-            pontoCorte = MAX_Pesos / 2;
+        // Define o ponto de corte
+        pontoCorte = MAX_Pesos / 2;
 
-            // Realiza o cruzamento nos pontos de corte
-            for (i = 0; i < MAX_Pesos; i++) {
-                if (i < pontoCorte) {
-                    descendente1->genes[i] = pai1->genes[i];
-                    descendente2->genes[i] = pai2->genes[i];
-                } else {
-                    descendente1->genes[i] = pai2->genes[i];
-                    descendente2->genes[i] = pai1->genes[i];
-                }
+        // Realiza o cruzamento nos pontos de corte
+        for (i = 0; i < MAX_Pesos; i++) {
+            if (i < pontoCorte) {
+                descendente1->genes[i] = pai1->genes[i];
+                descendente2->genes[i] = pai2->genes[i];
+            } else {
+                descendente1->genes[i] = pai2->genes[i];
+                descendente2->genes[i] = pai1->genes[i];
             }
-
-            // Define outros atributos dos descendentes
-            descendente1->prox = descendente2;
-            descendente2->prox = NULL;
-            descendente1->numero = L->totalIndividuos + 1;
-            descendente2->numero = L->totalIndividuos + 2;
-            descendente1->erros = -1;
-            descendente2->erros = -1;
-
-            // Insere os descendentes na população
-			if (listaFilhos.individuoAtual == NULL){
-				listaFilhos.populacao = descendente1;
-			}
-
-
-            // Atualiza o número total de indivíduos na população
-            L->totalIndividuos += 2;
-        } else {
-            // Se não houver par de pais disponíveis, interrompe o loop
-            break;
         }
-		
-    }
 
-    // Liga o último indivíduo da lista principal com o primeiro da lista de filhos
-    TIndividuo *atual = L->populacao;
-    while (atual->prox != NULL) {
-        atual = atual->prox;
+        // Define outros atributos dos descendentes
+        descendente1->prox = descendente2;
+        descendente2->prox = NULL;
+        descendente1->numero = L->totalIndividuos + 1;
+        descendente2->numero = L->totalIndividuos + 2;
+        descendente1->erros = -1;
+        descendente2->erros = -1;
+
+        // Insere os descendentes na população
+		insereNoFinal(L,descendente1,descendente2,fimLista);
+
+
+        // Atualiza o número total de indivíduos na população
+        L->totalIndividuos += 2;
     }
-    atual->prox = L->populacao->prox;
 }
+
 //==============================================================
 void avaliacaoIndividuos(TLista *L){
     TIndividuo *atual = L->populacao;
