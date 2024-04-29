@@ -332,6 +332,7 @@ void cruzamento(TLista *L){
     int pontoCorte, i;
     // Percorre a lista de indivíduos
     pai1 = L->populacao;
+	TLista listaFilhos;
     while (pai1 != NULL) {
         pai2 = pai1->prox;
 		printf("cruzando individuo %d com individuo %d\n",pai1->numero,pai2->numero);
@@ -364,8 +365,10 @@ void cruzamento(TLista *L){
             descendente2->erros = -1;
 
             // Insere os descendentes na população
-            pai1->prox = descendente1;
-            pai1 = descendente2->prox;
+			if (listaFilhos.individuoAtual == NULL){
+				listaFilhos.populacao = descendente1;
+			}
+			         
 
             // Atualiza o número total de indivíduos na população
             L->totalIndividuos += 2;
@@ -373,6 +376,7 @@ void cruzamento(TLista *L){
             // Se não houver par de pais disponíveis, interrompe o loop
             break;
         }
+		
     }
 
     // Liga o último indivíduo da lista principal com o primeiro da lista de filhos
