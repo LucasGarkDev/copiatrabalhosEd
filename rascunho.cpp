@@ -368,7 +368,7 @@ void cruzamento(TLista *L){
 			if (listaFilhos.individuoAtual == NULL){
 				listaFilhos.populacao = descendente1;
 			}
-			
+
 
             // Atualiza o número total de indivíduos na população
             L->totalIndividuos += 2;
@@ -439,7 +439,7 @@ void avaliacaoIndividuos(TLista *L){
             // Atualiza a quantidade de erros do indivíduo
             atual->erros = erros;
         }
-
+		//if(total de erros para repassar)
         // Avança para o próximo indivíduo na população
         atual = atual->prox;
     }
